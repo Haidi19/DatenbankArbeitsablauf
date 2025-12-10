@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Neues Projekt</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script>
+        function addExtraStep() {
+            const container = document.getElementById("extra-steps-container");
+            const div = document.createElement("div");
+            div.innerHTML = '<input type="text" name="extra_step" placeholder="Optionaler Arbeitsschritt">';
+            container.appendChild(div);
+        }
+    </script>
+</head>
+<body>
+
+<h1>Neues Projekt erstellen</h1>
+
+<form action="/new_project" method="POST">
+    <label>Projektname:</label><br>
+    <input type="text" name="name" required><br><br>
+
+    <h3>Vorgefertigte Arbeitsschritte (Häkchen entfernen, um Schritt auszuschließen):</h3>
+    {% for step in default_steps %}
+        <div>
+            <input type="checkbox" name="default_step" value="{{ step }}" checked>
+            <label>{{ step }}</label>
+        </div>
+    {% endfor %}
+
+    <h3>Optionale Arbeitsschritte hinzufügen:</h3>
+    <div id="extra-steps-container">
+        <div><input type="text" name="extra_step" placeholder="Optionaler Arbeitsschritt"></div>
+    </div>
+    <button type="button" onclick="addExtraStep()">+ Schritt hinzufügen</button>
+
+    <br><br>
+    <button type="submit">Projekt speichern</button>
+</form>
+
+<br>
+<a href="/">Zurück zur Übersicht</a>
+
+</body>
+</html>

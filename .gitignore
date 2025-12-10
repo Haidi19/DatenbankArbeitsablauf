@@ -1,0 +1,13 @@
+# Virtuelle Umgebung
+venv/
+env/
+__pycache__/
+*.pyc
+
+# SQLite DB (lokal, nicht in Repo)
+database.db
+database1.db
+
+# Editor/OS
+.vscode/
+.DS_Store

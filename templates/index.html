@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Projektübersicht</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<h1>Projektübersicht</h1>
+
+<a href="/new_project"><button type="button">+ Neues Projekt</button></a>
+
+<ul>
+    {% for item in project_statuses %}
+        <li class="project-box status-{{ item.worst_status }}">
+            <a href="/project/{{ item.project.id }}">{{ item.project.name }}</a>
+        </li>
+    {% endfor %}
+</ul>
+
+</body>
+</html>

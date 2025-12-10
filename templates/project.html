@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ project.name }}</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<h1>{{ project.name }}</h1>
+<a href="/">← zurück</a>
+
+<form action="/save_steps" method="POST">
+    <input type="hidden" name="project_id" value="{{ project.id }}">
+
+    {% for s in steps %}
+    <div class="step-box status-{{ s.status }}">
+        <strong>{{ s.step_name }}</strong><br>
+
+        <select name="status_{{ s.id }}" onchange="updateColorAndNote(this)">
+            <option value="offen"    {% if s.status=='offen' %}selected{% endif %}>offen</option>
+            <option value="erledigt" {% if s.status=='erledigt' %}selected{% endif %}>erledigt</option>
+            <option value="hinweis"  {% if s.status=='hinweis' %}selected{% endif %}>Hinweis</option>
+            <option value="fehler"   {% if s.status=='fehler' %}selected{% endif %}>Fehler</option>
+        </select>
+
+        <div class="note-container" style="display: {% if s.status in ['hinweis','fehler'] %}block{% else %}none{% endif %};">
+            <textarea name="note_{{ s.id }}" placeholder="Anmerkung erforderlich">{{ s.note or '' }}</textarea>
+        </div>
+    </div>
+    {% endfor %}
+
+    <br>
+    <button type="submit" class="save-button">Speichern</button>
+</form>
+
+<!-- Delete -->
+{% set all_done = True %}
+{% for s in steps %}
+    {% if s.status != 'erledigt' %}
+        {% set all_done = False %}
+    {% endif %}
+{% endfor %}
+
+{% if all_done %}
+    <br><br>
+    <form action="/delete_project" method="POST" 
+          onsubmit="return confirm('Projekt wirklich löschen? Das kann nicht rückgängig gemacht werden!');">
+        <input type="hidden" name="project_id" value="{{ project.id }}">
+        <button type="submit" class="delete-button">Projekt löschen</button>
+    </form>
+{% endif %}
+
+<script>
+function updateColorAndNote(selectElement) {
+    const box = selectElement.closest(".step-box");
+    box.classList.remove("status-offen", "status-erledigt", "status-hinweis", "status-fehler");
+    box.classList.add("status-" + selectElement.value);
+
+    const noteContainer = box.querySelector(".note-container");
+    if(selectElement.value === "hinweis" || selectElement.value === "fehler") {
+        noteContainer.style.display = "block";
+    } else {
+        noteContainer.style.display = "none";
+    }
+}
+</script>
+
+</body>
+</html>
